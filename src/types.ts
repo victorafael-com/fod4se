@@ -1,3 +1,5 @@
+import dictionary from "./dictionary";
+
 export interface FSMatch {
   profanity: string;
   replacement: string;
@@ -53,6 +55,10 @@ export interface FSConfig {
   ignoreSymbols?: boolean;
 }
 
-export type AnalyzeConfig = Omit<FSConfig, "profanity">;
+type dictionaryKey = keyof typeof dictionary;
+
+export type AnalyzeConfig = Omit<FSConfig, "profanity"> & {
+  appendDictionary?: dictionaryKey;
+};
 
 export type ReplaceDirection = "LTR" | "RTL";

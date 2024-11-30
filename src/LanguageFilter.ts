@@ -1,8 +1,7 @@
-import { FSConfig, FSResult, ReplaceDirection } from "./types";
 import dictionary from "./dictionary";
-import { normalizeText } from "normalize-text";
 import { analyzeText } from "./Logic";
 import { regexTemplate } from "./regexTemplates";
+import { FSConfig, FSResult, ReplaceDirection } from "./types";
 
 const defaultConfig: FSConfig = {
   replaceDirection: "RTL",
@@ -14,7 +13,7 @@ const defaultConfig: FSConfig = {
 
 interface LanguageFilterConfig {
   baseLanguage: "none" | keyof typeof dictionary;
-  config: FSConfig;
+  config?: FSConfig;
 }
 
 export class LanguageFilter {
@@ -27,6 +26,9 @@ export class LanguageFilter {
   ignoreSymbols: boolean;
 
   constructor({ baseLanguage, config }: LanguageFilterConfig) {
+    if (!config) {
+      config = {};
+    }
     this.replaceDirection =
       config.replaceDirection || defaultConfig.replaceDirection!;
     this.replaceRatio = config.replaceRatio || defaultConfig.replaceRatio!;
