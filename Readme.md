@@ -140,7 +140,7 @@ const filter = new LanguageFilter({
 ```typescript
 import { getSafeText, regexTemplate } from "fod4se";
 
-const text = "cat category [cat]";
+const text = "c4t category [cat]";
 const profanity = ["cat"];
 
 const templates = [
@@ -159,7 +159,7 @@ templates
 Outputs:
 *** category [***] //full
 *** ***egory [***] //partial
-cat category ***** //custom
+c4t category ***** //custom
 */
 ```
 
