@@ -101,4 +101,16 @@ describe("getSafeText", () => {
     });
     expect(result).toBe("we don't need to match $Уmβ0|§");
   });
+
+  test("should work with custom templates", () => {
+    const result = getSafeText("cat [cat]", ["cat"], {
+      matchTemplate: "\\[{0}\\]",
+    });
+    expect(result).toBe("cat *****");
+  });
+
+  test("tsst full word", () => {
+    const result = getSafeText("this is a [bad] word", ["bad"]);
+    expect(result).toBe("this is a [***] word");
+  });
 });

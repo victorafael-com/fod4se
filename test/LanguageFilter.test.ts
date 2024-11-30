@@ -107,3 +107,23 @@ describe("LanguageFilter - Custom configs", () => {
     expect(filter.getSafe("This is nothingness")).toBe("This is nothingness");
   });
 });
+
+describe("LanguageFilter - Should work with base dictionary", () => {
+  test("should filter english profanities", () => {
+    const filter = new LanguageFilter({
+      baseLanguage: "en",
+    });
+    const result = filter.analyze("fuck this dumb4ss test");
+    expect(result.cleaned).toBe("**** this ******* test");
+    expect(result.profanity).toBe(true);
+  });
+
+  test("should filter pt-br profanities", () => {
+    const filter = new LanguageFilter({
+      baseLanguage: "pt-br",
+    });
+    const result = filter.analyze("foda-se esse teste de m3rda");
+    expect(result.cleaned).toBe("******* esse teste de *****");
+    expect(result.profanity).toBe(true);
+  });
+});
