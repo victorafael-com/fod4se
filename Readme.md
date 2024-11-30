@@ -105,7 +105,7 @@ import { LanguageFilter, regexTemplate } from "fod4se";
 const filter = new LanguageFilter({
   baseLanguage: "en",
   config: {
-    replaceString: "#@", // Character pattern used in replacement
+    replaceString: "#@", // Pattern used in replacement (What is this #@#@#)
     replaceRatio: 0.5, // Replace 50% of matched words
     replaceDirection: "LTR", // Replace from left to right
     matchTemplate: regexTemplate.partialMatch, // Match partial words

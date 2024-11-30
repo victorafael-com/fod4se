@@ -16,6 +16,10 @@
   ],
   "author": "Victor Rafael",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/victorafael-com/fod4se"
+  },
   "dependencies": {
     "normalize-text": "^2.5.0"
   },
@@ -26,5 +30,9 @@
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
-  }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ]
 }
