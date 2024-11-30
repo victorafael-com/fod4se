@@ -1,0 +1,30 @@
+{
+  "name": "fod4se",
+  "version": "0.1.0",
+  "description": "A playful text normalization library that cleans up profanity, decodes obfuscated words, and gives you full control over how the text is displayed in the end.",
+  "main": "index.ts",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc"
+  },
+  "keywords": [
+    "profanity",
+    "obfuscated",
+    "filter",
+    "censorship",
+    "bad language"
+  ],
+  "author": "Victor Rafael",
+  "license": "MIT",
+  "dependencies": {
+    "normalize-text": "^2.5.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.10.1",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}
