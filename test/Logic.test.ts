@@ -10,6 +10,27 @@ describe("analyzeText", () => {
     expect(result.profanity).toBe(true);
     expect(result.matches.length).toBe(1);
   });
+
+  test("should return the correct positions", () => {
+    const result = analyzeText(
+      "test bad word. this is another b4d one. this is a worst one!",
+      ["bad", "worst"]
+    );
+    expect(result.matches.length).toBe(3);
+    expect(result.matches[0].start).toBe(5);
+    expect(result.matches[0].end).toBe(8);
+    expect(result.matches[1].start).toBe(31);
+    expect(result.matches[1].end).toBe(34);
+    expect(result.matches[2].start).toBe(50);
+    expect(result.matches[2].end).toBe(55);
+  });
+  test("should report properly the found profanity", () => {
+    const result = analyzeText("test a bad b4d b@d word", ["bad"]);
+    expect(result.matches.length).toBe(3);
+    expect(result.matches[0].profanity).toBe("bad");
+    expect(result.matches[1].profanity).toBe("bad");
+    expect(result.matches[2].profanity).toBe("bad");
+  });
 });
 
 describe("getSafeText", () => {
