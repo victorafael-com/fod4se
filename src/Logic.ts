@@ -2,6 +2,7 @@ import normalizeText from "normalize-text";
 import { AnalyzeConfig, FSResult, ReplaceDirection } from "./types";
 import { regexTemplate } from "./regexTemplates";
 import { symbolRegexList } from "./symbolsRegex";
+import dictionary from "./dictionary";
 
 function fixReplaceRatio(number?: number) {
   if (typeof number === "number") {
@@ -68,9 +69,9 @@ export function analyzeText(
   profanity: string[],
   config?: AnalyzeConfig
 ): FSResult {
-  if (profanity.length === 0) {
+  if (profanity.length === 0 && !config?.appendDictionary) {
     console.warn(
-      "Fod4se: No profanity list provided. No filtering will be done."
+      "Fod4se: No profanity list or base dictionary provided. No filtering will be done."
     );
     return {
       original: text,
@@ -80,22 +81,51 @@ export function analyzeText(
     };
   }
 
-  const ignore = config?.ignore || [];
+  let ignore = config?.ignore || [];
   const replaceString = config?.replaceString || "*";
   const replaceRatio = fixReplaceRatio(config?.replaceRatio);
   const replaceDirection = config?.replaceDirection || "RTL";
   const matchTemplate = config?.matchTemplate || regexTemplate.fullWord;
-  const ignoreSymbols = !!config?.ignoreSymbols;
 
-  const normalized = ignoreSymbols
-    ? normalizeText(text)
-    : normalizeSymbols(normalizeText(text));
+  const matchSymbols = !config?.ignoreSymbols;
+
+  if (config?.appendDictionary) {
+    profanity = [
+      ...profanity,
+      ...dictionary[config.appendDictionary].profanity,
+    ];
+    ignore = [...ignore, ...dictionary[config.appendDictionary].ignore];
+  }
+
+  const normalized = normalizeText(text);
+  let symbolFree: string;
+
+  if (matchSymbols) {
+    symbolFree = normalizeSymbols(normalized);
+    profanity = profanity.map((word) => normalizeSymbols(word));
+  }
 
   const matches = profanity
     .map((word) => {
       let regex = regExp(matchTemplate, word);
       //checks for matches in the normalized text
-      const matches = normalized.matchAll(regex);
+      const matches = Array.from(normalized.matchAll(regex));
+      if (matchSymbols) {
+        regex = regExp(matchTemplate, normalizeSymbols(word));
+        //checks for matches in the symbol free text
+        const symbolMatches = Array.from(symbolFree.matchAll(regex)).filter(
+          (match) =>
+            !matches.find(
+              (m) => m.index === match.index && m.length === match.length
+            )
+        );
+
+        //finds if match is new
+
+        if (symbolMatches) {
+          matches.push(...symbolMatches);
+        }
+      }
       if (matches) {
         return Array.from(matches).map((match) => {
           const start = match.index!;

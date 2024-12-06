@@ -8,7 +8,7 @@ const regexTemplate = {
    * Matches the word only if it is a full word
    * Example: `bad` will match `bad` but not `badass`, `badger`, `badminton`
    */
-  fullWord: "\\b{0}\\b",
+  fullWord: "(?<=^|\\s|[\\[({\"']){0}(?=$|\\s|[\\])}!?.,;:\"'])",
 };
 
 export { regexTemplate };

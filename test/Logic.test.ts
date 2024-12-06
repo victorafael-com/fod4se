@@ -52,6 +52,23 @@ describe("getSafeText", () => {
     warn.mockRestore();
   });
 
+  test("should not trigger a warning if no profanity list is provided but dictionary is", () => {
+    const warn = jest.spyOn(console, "warn").mockImplementation();
+    const result = getSafeText("test bad word", [], {
+      appendDictionary: "en",
+    });
+    expect(result).toBe("test bad word");
+    expect(warn).not.toHaveBeenCalled();
+    warn.mockRestore();
+  });
+
+  test("should validate words from appended dictionary", () => {
+    const result = getSafeText("what the fuck", [], {
+      appendDictionary: "en",
+    });
+    expect(result).toBe("what the ****");
+  });
+
   test("should make partial RTL replacement", () => {
     const result = getSafeText("test bad word", ["bad"], {
       replaceString: "*",
@@ -130,8 +147,21 @@ describe("getSafeText", () => {
     expect(result).toBe("cat *****");
   });
 
-  test("tsst full word", () => {
+  test("test full word between brackets", () => {
     const result = getSafeText("this is a [bad] word", ["bad"]);
     expect(result).toBe("this is a [***] word");
+  });
+
+  test("Removing symbols shouldn't affect the result with punctuatiions", () => {
+    const result = getSafeText("this is a b@d word", ["bad"]);
+    expect(result).toBe("this is a *** word");
+
+    const result2 = getSafeText("this word is bad!", ["bad"]);
+    expect(result2).toBe("this word is ***!");
+  });
+
+  test("should match l and i as the same character", () => {
+    const result = getSafeText("this is a flne word", ["fine"]);
+    expect(result).toBe("this is a **** word");
   });
 });

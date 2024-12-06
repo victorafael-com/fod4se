@@ -1,23 +1,20 @@
 export const symbolRegexList = [
   {
     target: "a",
-    regex: /[a@4∆^λΔąàáâãäåāăąǎǟǡǻȁȃạảấầẩẫậắằẳẵặ]/gi,
+    regex: /[a@4∆^λΔàáâãäåāăǎǟǡǻȁȃạảấầẩẫậắằẳẵặ]/gi,
   },
   {
     target: "b",
-    regex: /[b8ƀɓβбБвЬЪЬβ]/gi,
+    regex: /[b8ƀɓбБвЪЬβ]/gi,
   },
   {
     target: "e",
-    regex: /[e3εèéêëēĕėęěɛέεеЕёξ]/gi,
+    regex: /[e3εèéêëēĕėęěɛέеЕёξ]/gi,
   },
   {
+    //since i and l are close to each other. both will be converted to i
     target: "i",
-    regex: /[i1!Ії]/gi,
-  },
-  {
-    target: "l",
-    regex: /[l|]/gi,
+    regex: /[i1!|lІї]/gi,
   },
   {
     target: "o",
@@ -48,3 +45,9 @@ export const symbolRegexList = [
     regex: /[z2ƶȥźżžżẑẓẕ]/gi,
   },
 ];
+
+export function normalizeSymbols(text: string) {
+  return symbolRegexList.reduce((currentText, symbol) => {
+    return currentText.replace(symbol.regex, symbol.target);
+  }, text);
+}

@@ -1,1 +1,12 @@
-{ "profanity": ["fuck", "asshole", "bitch", "dumbass", "whore"], "ignore": [] }
+{
+  "profanity": [
+    "fuck",
+    "fucking",
+    "asshole",
+    "bitch",
+    "dumbass",
+    "whore",
+    "fucker"
+  ],
+  "ignore": []
+}
