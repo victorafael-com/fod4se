@@ -26,6 +26,22 @@ describe("LanguageFilter - Default configs", () => {
     expect(result.cleaned).toBe("check out my badge");
     expect(result.profanity).toBe(false);
   });
+
+  test("should return text blocks", () => {
+    const result = filter.getBlocks("this is bad");
+    expect(result).toEqual([
+      {
+        text: "this is ",
+        original: "this is ",
+        profanity: false,
+      },
+      {
+        text: "***",
+        original: "bad",
+        profanity: true,
+      },
+    ]);
+  });
 });
 describe("LanguageFilter - Custom configs", () => {
   const filter = new LanguageFilter({

@@ -14,6 +14,12 @@ export interface FSResult {
   matches: FSMatch[];
 }
 
+export interface FSTextBlockInfo {
+  text: string;
+  original: string;
+  profanity: boolean;
+}
+
 /**
  * Configuration for the filter
  */

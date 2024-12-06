@@ -1,7 +1,7 @@
 import dictionary from "./dictionary";
-import { analyzeText } from "./Logic";
+import { analyzeText, getTextBlocks } from "./Logic";
 import { regexTemplate } from "./regexTemplates";
-import { FSConfig, FSResult, ReplaceDirection } from "./types";
+import { FSConfig, FSResult, FSTextBlockInfo, ReplaceDirection } from "./types";
 
 const defaultConfig: FSConfig = {
   replaceDirection: "RTL",
@@ -55,18 +55,26 @@ export class LanguageFilter {
     }
   }
 
-  analyze(text: string): FSResult {
-    return analyzeText(text, this.profanity, {
+  private getLogicConfig(): FSConfig {
+    return {
       ignore: this.ignore,
       replaceDirection: this.replaceDirection,
       replaceRatio: this.replaceRatio,
       replaceString: this.replaceString,
       matchTemplate: this.matchTemplate,
       ignoreSymbols: this.ignoreSymbols,
-    });
+    };
+  }
+
+  analyze(text: string): FSResult {
+    return analyzeText(text, this.profanity, this.getLogicConfig());
   }
 
   getSafe(text: string): string {
     return this.analyze(text).cleaned;
+  }
+
+  getBlocks(text: string): FSTextBlockInfo[] {
+    return getTextBlocks(text, this.profanity, this.getLogicConfig());
   }
 }

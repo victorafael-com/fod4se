@@ -1,5 +1,10 @@
 import normalizeText from "normalize-text";
-import { AnalyzeConfig, FSResult, ReplaceDirection } from "./types";
+import {
+  AnalyzeConfig,
+  FSResult,
+  FSTextBlockInfo,
+  ReplaceDirection,
+} from "./types";
 import { regexTemplate } from "./regexTemplates";
 import { symbolRegexList } from "./symbolsRegex";
 import dictionary from "./dictionary";
@@ -195,4 +200,48 @@ export function getSafeText(
   config?: AnalyzeConfig
 ): string {
   return analyzeText(text, profanity, config).cleaned;
+}
+
+export function getTextBlocks(
+  text: string,
+  profanity: string[],
+  config?: AnalyzeConfig
+): FSTextBlockInfo[] {
+  const result = analyzeText(text, profanity, config);
+
+  if (!result.profanity) {
+    return [{ text, original: text, profanity: false }];
+  }
+
+  const blocks: FSTextBlockInfo[] = [];
+  let lastEnd = 0;
+  for (let i = 0; i < result.matches.length; i++) {
+    const match = result.matches[i];
+
+    if (match.start > lastEnd) {
+      const previous = result.original.substring(lastEnd, match.start);
+      blocks.push({
+        text: previous,
+        original: previous,
+        profanity: false,
+      });
+    }
+
+    blocks.push({
+      text: result.cleaned.substring(match.start, match.end),
+      original: result.original.substring(match.start, match.end),
+      profanity: true,
+    });
+
+    lastEnd = match.end;
+  }
+
+  if (lastEnd < result.original.length) {
+    blocks.push({
+      text: result.original.substring(lastEnd),
+      original: result.original.substring(lastEnd),
+      profanity: false,
+    });
+  }
+  return blocks;
 }

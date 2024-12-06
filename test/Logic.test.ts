@@ -1,4 +1,5 @@
 import { analyzeText, getSafeText } from "../src";
+import { getTextBlocks } from "../src/Logic";
 
 describe("analyzeText", () => {
   test("should analyze and replace text", () => {
@@ -163,5 +164,33 @@ describe("getSafeText", () => {
   test("should match l and i as the same character", () => {
     const result = getSafeText("this is a flne word", ["fine"]);
     expect(result).toBe("this is a **** word");
+  });
+});
+
+describe("block info", () => {
+  test("should return block info", () => {
+    const result = getTextBlocks("this is a bad word", ["bad"]);
+
+    expect(result.length).toBe(3);
+    expect(result[0].text).toBe("this is a ");
+    expect(result[0].original).toBe("this is a ");
+    expect(result[0].profanity).toBe(false);
+
+    expect(result[1].text).toBe("***");
+    expect(result[1].original).toBe("bad");
+    expect(result[1].profanity).toBe(true);
+
+    expect(result[2].text).toBe(" word");
+    expect(result[2].original).toBe(" word");
+    expect(result[2].profanity).toBe(false);
+  });
+
+  test("should handle profanities in both start and end", () => {
+    const result = getTextBlocks("bad word are bad", ["bad"]);
+
+    expect(result.length).toBe(3);
+    expect(result[0].profanity).toBe(true);
+    expect(result[1].profanity).toBe(false);
+    expect(result[2].profanity).toBe(true);
   });
 });
